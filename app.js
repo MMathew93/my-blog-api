@@ -7,14 +7,14 @@ const logger = require('morgan');
 
 let indexRouter = require('./routes/index');
 let adminRouter = require('./routes/admin');
-let postRouter = require('./routes/post');
-let commentRouter = require('./routes/comment');
+let postRouter = require('./routes/posts');
+let commentRouter = require('./routes/comments');
 
 
 const app = express();
 
 const mongoose = require('mongoose');
-let mongoDB = proscess.env.SECRET;
+let mongoDB = process.env.SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -31,8 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
-app.use('/post', postRouter);
-app.use('/comment', commentRouter);
+app.use('/posts', postRouter);
+app.use('/comments', commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

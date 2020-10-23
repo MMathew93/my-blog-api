@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-let adminController = required('../controllers/adminController');
+const adminController = require('../controllers/adminController');
 
-router.post('/login', adminController.postUserLogin)
+router.post('/login', adminController.postAdminLogin)
 
 module.exports = router;

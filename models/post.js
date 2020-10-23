@@ -19,7 +19,7 @@ PostSchema
 });
 
 PostSchema
-.virtual('isPublished')
+.virtual('publishStatus')
 .get(function() {
     return this.isPublished === 'published'
 });
