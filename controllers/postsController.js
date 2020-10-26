@@ -40,25 +40,28 @@ exports.postCreateNewPost = [
         .trim()
         .withMessage('Your post cannot be empty'),
         async(req, res, next) => {
-            const errors = await validationResult(req);
-    
-            if(!errors.isEmpty()) {
-                res.send('Implement a resend of errors back to front end')
-                console.log(errors)
-            }else {
-                let post = new Post(
-                    {
-                        title: req.body.title,
-                        postedDate: new Date(),
-                        text: req.body.text,
-                        isPublished: req.body.isPublished
-                    }
-                )
-                await post.save(function(err) {
-                    if(err) { return next(err); }
-                });
-                res.status(201);
-                res.send();
+            try{
+                const errors = await validationResult(req);
+                if(!errors.isEmpty()) {
+                    res.send('Implement a resend of errors back to front end')
+                    console.log(errors)
+                }else {
+                    let post = new Post(
+                        {
+                            title: req.body.title,
+                            postedDate: new Date(),
+                            text: req.body.text,
+                            isPublished: req.body.isPublished
+                        }
+                    )
+                    await post.save(function(err) {
+                        if(err) { return next(err); }
+                    });
+                    res.status(201);
+                    res.send();
+                }
+            }catch(err) {
+                console.error(err);
             }
         }
 ];

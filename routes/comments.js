@@ -5,8 +5,8 @@ const commentsController = require('../controllers/commentsController');
 //get comments for specific post id
 router.get('/', commentsController.getCommentsForPostId);
 
-//post a new comment got a specific post
-router.post('/create', commentsController.postCommentForPostId);
+//post a new comment to a specific post
+router.post('/new', commentsController.postCommentForPostId);
 
 //delete a comment from specific post
 router.delete('/:commentId', commentsController.deleteCommentByCommentId);
