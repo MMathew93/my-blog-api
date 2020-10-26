@@ -1,4 +1,5 @@
-let Comment = require('../models/comment');
+const Comment = require('../models/comment');
+const Post = require('../models/post');
 
 //Users can see all comments for a specific post
 exports.getCommentsForPostId = function(req, res, next) {
