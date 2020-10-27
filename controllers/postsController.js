@@ -21,8 +21,9 @@ exports.getPublishedPosts = async(req, res, next) => {
 };
 
 //users can select specific posts to read
-exports.getPostById = function(req, res, next) {
-    res.send('NOT IMPLEMENTED YET')
+exports.getPostById = async(req, res, next) => {
+    const post = await Post.findById({_id: req.params.postId}, 'title date text');
+    res.json(post)
 };
 
 //Admin posts new posts
@@ -43,8 +44,7 @@ exports.postCreateNewPost = [
             try{
                 const errors = await validationResult(req);
                 if(!errors.isEmpty()) {
-                    res.send('Implement a resend of errors back to front end')
-                    console.log(errors)
+                    res.send(errors);
                 }else {
                     let post = new Post(
                         {

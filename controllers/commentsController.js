@@ -5,8 +5,8 @@ const { body, validationResult, check } = require('express-validator');
 //Users can see all comments for a specific post
 exports.getCommentsForPostId = async(req, res, next) => {
     try {
-        const postId = await Post.findById(req.params.postId);
-        const comments = await Comment.find({ post: postId});
+        const comments = await Comment.find({ post: req.postId});
+        console.log(comments)
         res.json(comments)
     }catch(err) {
         console.error(err);
@@ -29,26 +29,23 @@ exports.postCommentForPostId = [
         .withMessage('Your post cannot be empty'),
         async(req, res, next) => {
             try {
-                const postId = await Post.findOne({_id: req.params.postId});
                 const errors = await validationResult(req);
-        
                 if(!errors.isEmpty()) {
-                    res.send('Implement a resend of errors back to front end')
-                    console.log(postId)
+                    res.send(errors);
                 }else {
-                    let comments = new Comment(
+                    let comment = new Comment(
                         {
-                            username: req.body.username,
+                            username: req.body.username ? req.body.username : 'Anonymous',
                             postedDate: new Date(),
                             text: req.body.text,
-                            post: post
+                            post: req.postId
                         }
                     )
-                    await comments.save(function(err) {
+                    await comment.save(function(err) {
                         if(err) { return next(err); }
                     });
                     res.status(201);
-                    res.send(comments);
+                    res.send();
                 }
             }catch(err) {
                 console.error(err);
