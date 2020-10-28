@@ -1,7 +1,5 @@
-require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-let token = jwt.sign({ foo: 'bar' }, process.env.TOKEN);
 const Admin = require('../models/admin');
 const { body, validationResult, check } = require('express-validator');
 
@@ -28,7 +26,11 @@ exports.postAdminLogin = [
                             const isValid = bcrypt.compare(req.body.password, admin.password);
                             if(isValid) {
                                 //DO JWT TOKEN STUFF HERE
-                                res.json({message: "Success we did it!"});
+                                jwt.sign({ admin }, `${process.env.TOKENKEY}`, { expiresIn: '1 day'}, (err, token) => {
+                                    res.json({
+                                        token
+                                    });
+                                });
                             }else {
                                 res.json({message: "Password is incorrect"});
                             }
@@ -44,5 +46,14 @@ exports.postAdminLogin = [
 ];
 
 exports.verifyToken = async(req, res, next) => {
-
+    //Get auth header value
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    }else {
+        res.sendStatus(403);
+    }
 };
