@@ -101,30 +101,34 @@ exports.putUpdatePostId =[
         .withMessage('Your post cannot be empty'),
         async (req, res, next) => {
             try {
-                const errors = validationResult(req);
-                if (!errors.isEmpty()) {
-                    res.send('Implement a resend of errors back to front end')
-                    console.log(errors)
-                } else {
-                    let post = {
-                        title: req.body.title,
-                        postedDate: new Date(),
-                        text: req.body.text,
-                        isPublished: req.body.isPublished,
-                        _id: req.params.postId //THIS IS REQUIRED OR A NEW ID WILL BE ASSIGNED
-                    }
-                    await Post.findByIdAndUpdate(req.params.postId, post, {}, function (err) {
-                        if (err) {
-                            return next(err);
+                await jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+                    if (err) {
+                        res.sendStatus(403);
+                    } else {
+                        const errors = validationResult(req);
+                        if (!errors.isEmpty()) {
+                            res.send('Implement a resend of errors back to front end')
+                        }else {
+                            let post = {
+                                title: req.body.title,
+                                postedDate: new Date(),
+                                text: req.body.text,
+                                isPublished: req.body.isPublished,
+                                _id: req.params.postId //THIS IS REQUIRED OR A NEW ID WILL BE ASSIGNED
+                            }
+                            Post.findByIdAndUpdate(req.params.postId, post, {}, function (err) {
+                                if (err) {
+                                    return next(err);
+                                }
+                            });
+                            res.status(201);
+                            res.send();
                         }
-                    });
-                    res.status(201);
-                    res.send();
-                }
+                    }
+                });
             } catch (err) {
                 console.error(err);
             }
-
         }
     ];
 
