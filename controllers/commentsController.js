@@ -6,7 +6,6 @@ const { body, validationResult, check } = require('express-validator');
 exports.getCommentsForPostId = async(req, res, next) => {
     try {
         const comments = await Comment.find({ post: req.postId});
-        console.log(comments)
         res.json(comments)
     }catch(err) {
         console.error(err);
@@ -17,9 +16,7 @@ exports.getCommentsForPostId = async(req, res, next) => {
 exports.postCommentForPostId = [
     //validationFields
     body('username')
-        .trim()
-        .isAlphanumeric()
-        .withMessage('Username contains non-alphanumeric characters'),
+        .trim(),
     body('postedDate')
         .optional({ checkFalsy: true })
         .isISO8601(),
@@ -54,6 +51,12 @@ exports.postCommentForPostId = [
 ];
 
 //Admin can delete posts
-exports.deleteCommentByCommentId = function(req, res, next) {
-    res.send('Not implemented yet')
+exports.deleteCommentByCommentId = async(req, res, next) => {
+    try {
+        console.log(req.params.commentId)
+        await Comment.findByIdAndRemove(req.params.commentId);
+        res.redirect('/');
+    }catch(err) {
+        console.error(err);
+    }
 };
