@@ -9,7 +9,7 @@ exports.getAllPosts = async (req, res, next) => {
             if (err) {
                 res.sendStatus(403);
             } else {
-                const posts = Post.find({}, 'title author formattedDate text isPublished');
+                const posts = Post.find({}, 'title author postedDate text isPublished');
                 res.json(posts);
             }
         });
@@ -23,7 +23,7 @@ exports.getPublishedPosts = async (req, res, next) => {
     try {
         const publishedPosts = await Post.find({
             isPublished: true
-        }, 'title author formattedDate text');
+        }, 'title author postedDate text');
         res.json(publishedPosts);
     } catch (err) {
         console.error(err);
@@ -34,7 +34,7 @@ exports.getPublishedPosts = async (req, res, next) => {
 exports.getPostById = async (req, res, next) => {
     const post = await Post.findById({
         _id: req.params.postId
-    }, 'title formattedDate text');
+    }, 'title postedDate text');
     res.json(post)
 };
 

@@ -7,7 +7,7 @@ exports.getCommentsForPostId = async (req, res, next) => {
     try {
         const comments = await Comment.find({
             post: req.postId
-        }, 'username formattedDate text');
+        }, 'username postedDate text');
         res.json(comments)
     } catch (err) {
         console.error(err);
