@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 //Admin auth to get all posts
 exports.getAllPosts = async (req, res, next) => {
     try {
-        jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+        await jwt.verify(req.token, process.env.TOKENKEY, async (err) => {
             if (err) {
                 res.sendStatus(403);
             } else {
-                const posts = Post.find({}, 'title author postedDate text isPublished');
-                res.json(posts);
+                const allPosts = await Post.find();
+                res.json(allPosts);
             }
         });
     } catch (err) {
@@ -23,7 +23,7 @@ exports.getPublishedPosts = async (req, res, next) => {
     try {
         const publishedPosts = await Post.find({
             isPublished: true
-        }, 'title author postedDate text');
+        }, 'title postedDate text');
         res.json(publishedPosts);
     } catch (err) {
         console.error(err);
@@ -54,7 +54,7 @@ exports.postCreateNewPost = [
         .withMessage('Your post cannot be empty'),
         async (req, res, next) => {
             try {
-                await jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+                await jwt.verify(req.token, `${process.env.TOKENKEY}`, async (err) => {
                     if (err) {
                         res.sendStatus(403);
                     } else {
@@ -68,7 +68,7 @@ exports.postCreateNewPost = [
                                 text: req.body.text,
                                 isPublished: req.body.isPublished
                             })
-                            post.save(function (err) {
+                            await post.save(function (err) {
                                 if (err) {
                                     return next(err);
                                 }
@@ -101,7 +101,7 @@ exports.putUpdatePostId =[
         .withMessage('Your post cannot be empty'),
         async (req, res, next) => {
             try {
-                await jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+                await jwt.verify(req.token, `${process.env.TOKENKEY}`, async (err) => {
                     if (err) {
                         res.sendStatus(403);
                     } else {
@@ -116,7 +116,7 @@ exports.putUpdatePostId =[
                                 isPublished: req.body.isPublished,
                                 _id: req.params.postId //THIS IS REQUIRED OR A NEW ID WILL BE ASSIGNED
                             }
-                            Post.findByIdAndUpdate(req.params.postId, post, {}, function (err) {
+                            await Post.findByIdAndUpdate(req.params.postId, post, {}, function (err) {
                                 if (err) {
                                     return next(err);
                                 }
@@ -137,11 +137,11 @@ exports.putUpdatePostId =[
 //Admin deletes posts
 exports.deletePostId = async (req, res, next) => {
     try {
-        await jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+        await jwt.verify(req.token, `${process.env.TOKENKEY}`, async (err) => {
             if (err) {
                 res.sendStatus(403);
             } else {
-                Post.findByIdAndRemove(req.params.postId);
+                await Post.findByIdAndRemove(req.params.postId);
                 res.redirect('/');
             }
         });

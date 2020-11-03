@@ -45,7 +45,7 @@ exports.postAdminLogin = [
         }
 ];
 
-exports.verifyToken = async(req, res, next) => {
+exports.verifyToken = (req, res, next) => {
     //Get auth header value
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader !== 'undefined') {
