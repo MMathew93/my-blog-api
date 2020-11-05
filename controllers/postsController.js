@@ -34,7 +34,7 @@ exports.getPublishedPosts = async (req, res, next) => {
 exports.getPostById = async (req, res, next) => {
     const post = await Post.findById({
         _id: req.params.postId
-    }, 'title postedDate text');
+    }, 'title postedDate text isPublished');
     res.json(post)
 };
 
