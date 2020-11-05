@@ -142,7 +142,8 @@ exports.deletePostId = async (req, res, next) => {
                 res.sendStatus(403);
             } else {
                 await Post.findByIdAndRemove(req.params.postId);
-                res.redirect('/');
+                res.status(201);
+                res.send();
             }
         });
     } catch (err) {
