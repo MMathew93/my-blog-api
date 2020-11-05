@@ -20,10 +20,10 @@ exports.postAdminLogin = [
                 if(!errors.isEmpty()) {
                     res.json(errors)
                 }else {
-                    await Admin.findOne({username: `${req.body.username}` }, (err, admin) => {
+                    await Admin.findOne({username: `${req.body.username}` }, async (err, admin) => {
                         if(err) { return next(err); }
                         if(admin) {
-                            const isValid = bcrypt.compare(req.body.password, admin.password);
+                            const isValid = await bcrypt.compare(req.body.password, admin.password);
                             if(isValid) {
                                 //DO JWT TOKEN STUFF HERE
                                 jwt.sign({ admin }, `${process.env.TOKENKEY}`, { expiresIn: '1 day'}, (err, token) => {
