@@ -1,6 +1,6 @@
 const Comment = require('../models/comment');
-const Post = require('../models/post');
 const { body, validationResult, check } = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 //Users can see all comments for a specific post
 exports.getCommentsForPostId = async (req, res, next) => {
@@ -55,13 +55,13 @@ exports.postCommentForPostId = [
 //Admin can delete posts
 exports.deleteCommentByCommentId = async (req, res, next) => {
     try {
-        await jwt.verify(req.token, `${process.env.TOKENKEY}`, (err) => {
+        await jwt.verify(req.token, `${process.env.TOKENKEY}`, async (err) => {
             if (err) {
                 res.sendStatus(403);
             } else {
-                console.log(req.params.commentId)
-                Comment.findByIdAndRemove(req.params.commentId);
-                res.redirect('/');
+                await Comment.findByIdAndRemove(req.params.commentId);
+                res.status(201);
+                res.send();
             }
         });
     } catch (err) {
