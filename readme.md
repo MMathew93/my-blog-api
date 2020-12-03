@@ -14,7 +14,8 @@ Mongoose/MongoDB
 
 
 ## Hosted Demo
-[The user interface hosted on Heroku](https://my-personal-blog-api.herokuapp.com/)!
+[Blog API is hosted on Heroku](https://my-personal-blog-api.herokuapp.com/)!
+[The user interface is also hosted on Heroku](https://my-personal-blog-userx.herokuapp.com/)!
 
 
 ## Associated Project Links
