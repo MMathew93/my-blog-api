@@ -5,7 +5,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const PORT = process.env.PORT || 3000;
 
 let indexRouter = require('./routes/index');
 let adminRouter = require('./routes/admin');
@@ -57,9 +56,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.listen(PORT, () => {
-  console.log(`Api is live on ${PORT}`)
-})
 
 module.exports = app;
